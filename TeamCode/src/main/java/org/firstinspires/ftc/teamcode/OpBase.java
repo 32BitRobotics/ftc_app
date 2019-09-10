@@ -10,11 +10,13 @@ import com.qualcomm.robotcore.util.Range;
 public abstract class OpBase extends LinearOpMode {
 
     // hardware members
-    public DcMotor lMotor;
-    public DcMotor rMotor;
+    public DcMotor frontLeft = null; //front left wheel
+    public DcMotor frontRight = null; //front right wheel
+    public DcMotor backLeft = null; //back left wheel
+    public DcMotor backRight = null; //back right wheel
 
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
+    protected ElapsedTime runtime = new ElapsedTime();
 
     protected abstract boolean runRobot();
     protected abstract boolean isAutonomous();
@@ -22,8 +24,15 @@ public abstract class OpBase extends LinearOpMode {
     @Override
     public void runOpMode() {
         // initialize hardware
-        lMotor = hardwareMap.dcMotor.get("lMotor");
-        rMotor = hardwareMap.dcMotor.get("rMotor");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        backRight = hardwareMap.get(DcMotor.class, "backRight");
+
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
         waitForStart();
         runtime.reset();
