@@ -8,7 +8,7 @@ public class BasicDrive extends OpBase {
     final double SLOW_SPEED = 0.2;
 
     @Override
-    protected boolean runRobot() {
+    protected boolean runRobot(int goSeconds) {
         // get the drive and turn from the gamepad
         double drive = -gamepad1.left_stick_y;
         double turn = gamepad1.left_stick_x;

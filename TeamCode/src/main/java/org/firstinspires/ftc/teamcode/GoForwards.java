@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(name="Goes Forwards for 4 Seconds")
 public final class GoForwards extends OpBase {
     @Override
-    protected boolean runRobot() {
+    protected boolean runRobot(int goSeconds) {
         runtime.reset();
 
         frontLeft.setPower(0.4);
@@ -13,7 +13,7 @@ public final class GoForwards extends OpBase {
         backLeft.setPower(0.4);
         backRight.setPower(0.4);
 
-        while (opModeIsActive() && runtime.seconds() <= 4);
+        while (opModeIsActive() && runtime.seconds() <= goSeconds);
 
         frontLeft.setPower(0);
         frontRight.setPower(0);

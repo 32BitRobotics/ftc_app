@@ -18,7 +18,7 @@ public abstract class OpBase extends LinearOpMode {
     // Declare OpMode members.
     protected ElapsedTime runtime = new ElapsedTime();
 
-    protected abstract boolean runRobot();
+    protected abstract boolean runRobot(int goSeconds);
     protected abstract boolean isAutonomous();
 
     @Override
@@ -37,9 +37,9 @@ public abstract class OpBase extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        if (isAutonomous()) runRobot();
+        if (isAutonomous()) runRobot(4);
         else {
-            while (opModeIsActive() && runRobot());
+            while (opModeIsActive() && runRobot(4));
         }
     }
 }
