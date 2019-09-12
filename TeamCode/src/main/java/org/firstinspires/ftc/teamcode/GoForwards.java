@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+@Autonomous(name="Goes Forwards for 4 Seconds")
 public final class GoForwards extends OpBase {
     @Override
     protected boolean runRobot() {
