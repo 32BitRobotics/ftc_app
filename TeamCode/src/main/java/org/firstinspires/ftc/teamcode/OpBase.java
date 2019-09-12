@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -14,6 +15,7 @@ public abstract class OpBase extends LinearOpMode {
     public DcMotor frontRight = null; //front right wheel
     public DcMotor backLeft = null; //back left wheel
     public DcMotor backRight = null; //back right wheel
+    public GyroSensor gyroSensor = null;
 
     // Declare OpMode members.
     protected ElapsedTime runtime = new ElapsedTime();
@@ -34,6 +36,24 @@ public abstract class OpBase extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
+        DcMotor.RunMode myRunMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+        if (isAutonomous()) {
+            myRunMode = DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+        }
+
+        frontLeft.setMode(myRunMode);
+        frontRight.setMode(myRunMode);
+        backLeft.setMode(myRunMode);
+        backRight.setMode(myRunMode);
+
+        if (isAutonomous()) {
+            myRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
+            frontLeft.setMode(myRunMode);
+            frontRight.setMode(myRunMode);
+            backLeft.setMode(myRunMode);
+            backRight.setMode(myRunMode);
+        }
+
         waitForStart();
         runtime.reset();
 
@@ -42,4 +62,6 @@ public abstract class OpBase extends LinearOpMode {
             while (opModeIsActive() && runRobot());
         }
     }
+
+
 }
