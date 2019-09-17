@@ -100,7 +100,7 @@ public abstract class OpBase extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        if (isAutonomous()) runRobot(4);
+        if (isAutonomous()) { runRobot(4); }
         else {
             while (opModeIsActive() && runRobot(4));
         }

@@ -34,7 +34,7 @@ public final class CameraManager {
 
         try {
             cam = Camera.open(cameraId);
-        } catch {
+        } catch (Exception e) {
             System.out.println("I have shidded myself repeatedly and I am not afraid to admit it");
         }
 
