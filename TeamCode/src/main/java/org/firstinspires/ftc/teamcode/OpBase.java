@@ -28,6 +28,9 @@ public abstract class OpBase extends LinearOpMode {
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
 
+    public static final double REGULAR_SPEED = 0.8;
+    public static final double SLOW_SPEED = 0.2;
+
     // hardware members
     public DcMotor frontLeft = null; //front left wheel
     public DcMotor frontRight = null; //front right wheel
@@ -38,6 +41,8 @@ public abstract class OpBase extends LinearOpMode {
     public DcMotorList leftDrive = new DcMotorList();
     public DcMotorList rightDrive = new DcMotorList();
 
+    // camera manager - probably broken but idc
+    public CameraManager cameraManager = new CameraManager();
 
     // Declare OpMode members.
     protected ElapsedTime runtime = new ElapsedTime();
@@ -312,6 +317,17 @@ public abstract class OpBase extends LinearOpMode {
      */
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
+    }
+
+    public void mecanumDirection(boolean rightIfTrue) {
+        DcMotorList forward_motors = new DcMotorList();
+        DcMotorList backward_motors = new DcMotorList();
+
+        if (rightIfTrue) {
+            forward_motors.add(frontLeft);
+            forward_motors.add(backRight);
+
+        }
     }
 }
 
