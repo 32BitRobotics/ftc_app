@@ -57,21 +57,21 @@ public abstract class OpBase extends LinearOpMode {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
-        leftDrive.set(0, frontLeft);
-        leftDrive.set(1, backLeft);
+        leftDrive.add( frontLeft);
+        leftDrive.add( backLeft);
 
-        rightDrive.set(0, frontRight);
-        rightDrive.set(1, backRight);
+        rightDrive.add( frontRight);
+        rightDrive.add( backRight);
 
         // initialize gyro
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = true;
         parameters.loggingTag = "IMU";
 
         gyroSensor = hardwareMap.get(BNO055IMU.class, "imu");
-        gyroSensor.initialize(parameters);
+        gyroSensor.initialize(parameters);*/
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
