@@ -37,6 +37,7 @@ public abstract class OpBase extends LinearOpMode {
 
     public DcMotorList leftDrive = new DcMotorList();
     public DcMotorList rightDrive = new DcMotorList();
+    //public drive
 
 
     // Declare OpMode members.
