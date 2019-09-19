@@ -40,6 +40,7 @@ public abstract class OpBase extends LinearOpMode {
 
     public DcMotorList leftDrive = new DcMotorList();
     public DcMotorList rightDrive = new DcMotorList();
+    //public drive
 
     // camera manager - probably broken but idc
     public CameraManager cameraManager = new CameraManager();
