@@ -38,17 +38,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -123,12 +129,15 @@ import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebInfo
 import org.firstinspires.ftc.robotserver.internal.programmingmode.ProgrammingModeManager;
 import org.firstinspires.inspection.RcInspectionActivity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @SuppressWarnings("WeakerAccess")
 public class FtcRobotControllerActivity extends Activity
-  {
+{
+
   public static final String TAG = "RCActivity";
   public String getTag() { return TAG; }
 
@@ -137,6 +146,9 @@ public class FtcRobotControllerActivity extends Activity
 
   protected WifiManager.WifiLock wifiLock;
   protected RobotConfigFileManager cfgFileMgr;
+
+  // FTC-11183 CODE
+  public static FtcRobotControllerActivity instance;
 
   protected ProgrammingModeManager programmingModeManager;
   protected ProgrammingModeController programmingModeController;
@@ -638,6 +650,77 @@ public class FtcRobotControllerActivity extends Activity
     monitorContainer.requestLayout();
   }
 
+  // FTC 11183 CODE
+  private final class ImagePicker_Class {
+    private static final int DEFAULT_MIN_WIDTH_QUALITY = 400;        // min pixels
+    private static final String TAG = "ImagePicker";
+    private static final String TEMP_IMAGE_NAME = "tempImage";
+
+    public int minWidthQuality = DEFAULT_MIN_WIDTH_QUALITY;
+
+    private File getTempFile(Context context) {
+      File imageFile = new File(context.getExternalCacheDir(), TEMP_IMAGE_NAME);
+      imageFile.getParentFile().mkdirs();
+      return imageFile;
+    }
+
+    private Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
+      BitmapFactory.Options options = new BitmapFactory.Options();
+      options.inSampleSize = sampleSize;
+
+      AssetFileDescriptor fileDescriptor = null;
+      try {
+        fileDescriptor = context.getContentResolver().openAssetFileDescriptor(theUri, "r");
+      } catch (FileNotFoundException e) {
+        System.out.println("I've shidded myself repeatedly and I'm not afraid to admit it");
+      }
+
+      Bitmap actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
+              fileDescriptor.getFileDescriptor(), null, options);
+
+      Log.d(TAG, options.inSampleSize + " sample method bitmap ... " +
+              actuallyUsableBitmap.getWidth() + " " + actuallyUsableBitmap.getHeight());
+
+      return actuallyUsableBitmap;
+    }
+
+    private Bitmap getImageResized(Context context, Uri selectedImage) {
+      Bitmap bm = null;
+      int[] sampleSizes = new int[]{5, 3, 2, 1};
+      int i = 0;
+      do {
+        bm = decodeBitmap(context, selectedImage, sampleSizes[i]);
+        Log.d(TAG, "resizer: new bitmap width = " + bm.getWidth());
+        i++;
+      } while (bm.getWidth() < minWidthQuality && i < sampleSizes.length);
+      return bm;
+    }
+
+    public Bitmap getImageFromResult(Context context, int resultCode,
+                                            Intent imageReturnedIntent) {
+      Log.d(TAG, "getImageFromResult, resultCode: " + resultCode);
+      Bitmap bm = null;
+      File imageFile = getTempFile(context);
+      if (resultCode == Activity.RESULT_OK) {
+        Uri selectedImage;
+        boolean isCamera = (imageReturnedIntent == null ||
+                imageReturnedIntent.getData() == null ||
+                imageReturnedIntent.getData().equals(Uri.fromFile(imageFile)));
+        if (isCamera) {     /** CAMERA **/
+          selectedImage = Uri.fromFile(imageFile);
+        } else {            /** ALBUM **/
+          selectedImage = imageReturnedIntent.getData();
+        }
+        Log.d(TAG, "selectedImage: " + selectedImage);
+
+        bm = getImageResized(context, selectedImage);
+      }
+      return bm;
+    }
+  }
+
+  public final ImagePicker_Class ImagePicker = new ImagePicker_Class();
+
   @Override
   protected void onActivityResult(int request, int result, Intent intent) {
     if (request == REQUEST_CONFIG_WIFI_CHANNEL) {
@@ -650,7 +733,18 @@ public class FtcRobotControllerActivity extends Activity
       // We always do a refresh, whether it was a cancel or an OK, for robustness
       cfgFileMgr.getActiveConfigAndUpdateUI();
     }
+
+    /* FTC 11183 CODE */
+
+    if (request == LOAD_CAMERA_IMG) {
+      if (result == RESULT_OK) {
+        imageResult = ImagePicker.getImageFromResult(context, result, intent);
+      }
+    }
   }
+
+  public Bitmap imageResult;
+  /* END */
 
   public void onServiceBind(final FtcRobotControllerService service) {
     RobotLog.vv(FtcRobotControllerService.TAG, "%s.controllerService=bound", TAG);
@@ -812,4 +906,19 @@ public class FtcRobotControllerActivity extends Activity
       wifiMuteStateMachine.consumeEvent(WifiMuteEvent.USER_ACTIVITY);
     }
   }
+
+  public FtcRobotControllerActivity() {
+    FtcRobotControllerActivity.instance = this;
+  }
+
+  public static final int LOAD_CAMERA_IMG = 6969;
+
+  /* FTC-11183 CODE */
+  public void startCameraActivity() {
+    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    if (intent.resolveActivity(this.getPackageManager()) != null) {
+      startActivityForResult(intent, LOAD_CAMERA_IMG);
+    }
+  }
+  /* END */
 }

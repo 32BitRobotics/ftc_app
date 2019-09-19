@@ -4,9 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="1-Stick Drive")
 public class BasicDrive extends OpBase {
-    final double REGULAR_SPEED = 0.8;
-    final double SLOW_SPEED = 0.2;
-
     @Override
     protected boolean runRobot(int goSeconds) {
         // get the drive and turn from the gamepad
@@ -33,13 +30,20 @@ public class BasicDrive extends OpBase {
 
         left *= throttle;
         right *= throttle;
-
+        if (gamepad1.dpad_left) this.moveSide(false); else if (gamepad1.dpad_right) this.moveSide(true);
         this.frontLeft.setPower(left);
         this.backLeft.setPower(left);
         this.frontRight.setPower(right);
         this.backRight.setPower(right);
 
-        if (gamepad1.dpad_left) this.moveSide(false); else if (gamepad1.dpad_right) this.moveSide(true);
+
+
+
+
+        telemetry.addData("Left Speed", left);
+        telemetry.addData("Right Speed", right);
+        telemetry.addData("Drive", drive);
+        telemetry.addData("Turn", turn);
 
 
         return true;

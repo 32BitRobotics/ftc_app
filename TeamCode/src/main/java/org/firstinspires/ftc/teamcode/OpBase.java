@@ -28,6 +28,9 @@ public abstract class OpBase extends LinearOpMode {
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
 
+    public static final double REGULAR_SPEED = 0.8;
+    public static final double SLOW_SPEED = 0.2;
+
     // hardware members
     public DcMotor frontLeft = null; //front left wheel
     public DcMotor frontRight = null; //front right wheel
@@ -41,6 +44,8 @@ public abstract class OpBase extends LinearOpMode {
     public DcMotorList rightDrive = new DcMotorList();
     public DcMotorList driveAll = new DcMotorList();
 
+    // camera manager - probably broken but idc
+    public CameraManager cameraManager = new CameraManager();
 
     // Declare OpMode members.
     protected ElapsedTime runtime = new ElapsedTime();
@@ -118,6 +123,35 @@ public abstract class OpBase extends LinearOpMode {
             while (opModeIsActive() && runRobot(4));
         }
     }
+
+    public void moveSide(boolean isRight) {
+        int side = isRight ? 1 : 0;
+
+        if (side == 1) {
+
+            frontLeft.setPower(0.5);
+            backLeft.setPower(-0.5);
+            frontRight.setPower(-0.5);
+            backRight.setPower(0.5);
+
+        } else {
+
+            frontLeft.setPower(-0.5);
+            backLeft.setPower(0.5);
+            frontRight.setPower(0.5);
+            backRight.setPower(-0.5);
+
+        }
+
+
+    }
+
+    /*public void moveAngle(int a) {
+
+        int angle = a;
+
+
+    }*/
 
     /**
      *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
@@ -326,33 +360,6 @@ public abstract class OpBase extends LinearOpMode {
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
     }
-    public void moveSide(boolean isRight) {
-        int side = isRight ? 1 : 0;
 
-        if (side == 1) {
-
-            frontLeft.setPower(0.5);
-            backLeft.setPower(-0.5);
-            frontRight.setPower(-0.5);
-            backRight.setPower(0.5);
-
-        } else {
-
-            frontLeft.setPower(-0.5);
-            backLeft.setPower(0.5);
-            frontRight.setPower(0.5);
-            backRight.setPower(-0.5);
-
-        }
-
-
-    }
-
-    /*public void moveAngle(int a) {
-
-        int angle = a;
-
-
-    }*/
 }
 
