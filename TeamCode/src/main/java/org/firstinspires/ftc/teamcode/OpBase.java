@@ -35,6 +35,8 @@ public abstract class OpBase extends LinearOpMode {
     public DcMotor backRight = null; //back right wheel
     public BNO055IMU gyroSensor = null;
 
+    public DcMotorList frontDrive = new DcMotorList();
+    public DcMotorList backDrive = new DcMotorList();
     public DcMotorList leftDrive = new DcMotorList();
     public DcMotorList rightDrive = new DcMotorList();
     public DcMotorList driveAll = new DcMotorList();
@@ -57,6 +59,12 @@ public abstract class OpBase extends LinearOpMode {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
+
+        frontDrive.add(frontLeft);
+        frontDrive.add(frontRight);
+
+        backDrive.add(backLeft);
+        backDrive.add(backRight);
 
         leftDrive.add( frontLeft);
         leftDrive.add( backLeft);
@@ -318,5 +326,33 @@ public abstract class OpBase extends LinearOpMode {
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
     }
+    public void moveSide(boolean isRight) {
+        int side = isRight ? 1 : 0;
+
+        if (side == 1) {
+
+            frontLeft.setPower(0.5);
+            backLeft.setPower(-0.5);
+            frontRight.setPower(-0.5);
+            backRight.setPower(0.5);
+
+        } else {
+
+            frontLeft.setPower(-0.5);
+            backLeft.setPower(0.5);
+            frontRight.setPower(0.5);
+            backRight.setPower(-0.5);
+
+        }
+
+
+    }
+
+    /*public void moveAngle(int a) {
+
+        int angle = a;
+
+
+    }*/
 }
 

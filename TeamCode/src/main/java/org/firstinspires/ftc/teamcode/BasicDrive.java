@@ -39,6 +39,9 @@ public class BasicDrive extends OpBase {
         this.frontRight.setPower(right);
         this.backRight.setPower(right);
 
+        if (gamepad1.dpad_left) this.moveSide(false); else if (gamepad1.dpad_right) this.moveSide(true);
+
+
         return true;
     }
 
