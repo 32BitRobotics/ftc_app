@@ -37,7 +37,7 @@ public abstract class OpBase extends LinearOpMode {
 
     public DcMotorList leftDrive = new DcMotorList();
     public DcMotorList rightDrive = new DcMotorList();
-    //public drive
+    public DcMotorList driveAll = new DcMotorList();
 
 
     // Declare OpMode members.
@@ -64,6 +64,10 @@ public abstract class OpBase extends LinearOpMode {
         rightDrive.add( frontRight);
         rightDrive.add( backRight);
 
+        driveAll.add(frontRight);
+        driveAll.add(frontLeft);
+        driveAll.add(backLeft);
+        driveAll.add(backRight);
         // initialize gyro
         /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
