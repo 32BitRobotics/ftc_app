@@ -736,11 +736,11 @@ public class FtcRobotControllerActivity extends Activity
 
     /* FTC 11183 CODE */
 
-    if (request == LOAD_CAMERA_IMG) {
+    /*if (request == LOAD_CAMERA_IMG) {
       if (result == RESULT_OK) {
         imageResult = ImagePicker.getImageFromResult(context, result, intent);
       }
-    }
+    }*/
   }
 
   public Bitmap imageResult;

@@ -43,7 +43,7 @@ public abstract class OpBase extends LinearOpMode {
     //public drive
 
     // camera manager - probably broken but idc
-    public CameraManager cameraManager = new CameraManager();
+    //public CameraManager cameraManager = new CameraManager();
 
     // Declare OpMode members.
     protected ElapsedTime runtime = new ElapsedTime();

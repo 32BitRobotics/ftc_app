@@ -8,7 +8,7 @@ public class BasicDrive extends OpBase {
     protected boolean runRobot(int goSeconds) {
         // get the drive and turn from the gamepad
         double drive = -gamepad1.left_stick_y;
-        double turn = gamepad1.left_stick_x;
+        double turn = -gamepad1.left_stick_x;
 
         // blend motion
         double left = drive + turn;
