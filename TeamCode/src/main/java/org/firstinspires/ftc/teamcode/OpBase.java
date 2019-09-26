@@ -36,11 +36,16 @@ public abstract class OpBase extends LinearOpMode {
     public DcMotor frontRight = null; //front right wheel
     public DcMotor backLeft = null; //back left wheel
     public DcMotor backRight = null; //back right wheel
+    public DcMotor rightMiddle = null; //rotates in the middle (right)
+    public DcMotor leftMiddle = null; //rotates in the middle (left)
+
     public BNO055IMU gyroSensor = null;
 
+    public DcMotorList frontDrive = new DcMotorList();
+    public DcMotorList backDrive = new DcMotorList();
     public DcMotorList leftDrive = new DcMotorList();
     public DcMotorList rightDrive = new DcMotorList();
-    //public drive
+    public DcMotorList driveAll = new DcMotorList();
 
     // camera manager - probably broken but idc
     //public CameraManager cameraManager = new CameraManager();
@@ -63,12 +68,22 @@ public abstract class OpBase extends LinearOpMode {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
+        frontDrive.add(frontLeft);
+        frontDrive.add(frontRight);
+
+        backDrive.add(backLeft);
+        backDrive.add(backRight);
+
         leftDrive.add( frontLeft);
         leftDrive.add( backLeft);
 
         rightDrive.add( frontRight);
         rightDrive.add( backRight);
 
+        driveAll.add(frontRight);
+        driveAll.add(frontLeft);
+        driveAll.add(backLeft);
+        driveAll.add(backRight);
         // initialize gyro
         /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -111,6 +126,35 @@ public abstract class OpBase extends LinearOpMode {
             while (opModeIsActive() && runRobot(4));
         }
     }
+
+    public void moveSide(boolean isRight) {
+        int side = isRight ? 1 : 0;
+
+        if (side == 1) {
+
+            frontLeft.setPower(0.5);
+            backLeft.setPower(-0.5);
+            frontRight.setPower(-0.5);
+            backRight.setPower(0.5);
+
+        } else {
+
+            frontLeft.setPower(-0.5);
+            backLeft.setPower(0.5);
+            frontRight.setPower(0.5);
+            backRight.setPower(-0.5);
+
+        }
+
+
+    }
+
+    /*public void moveAngle(int a) {
+
+        int angle = a;
+
+
+    }*/
 
     /**
      *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
@@ -320,15 +364,5 @@ public abstract class OpBase extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
-    public void mecanumDirection(boolean rightIfTrue) {
-        DcMotorList forward_motors = new DcMotorList();
-        DcMotorList backward_motors = new DcMotorList();
-
-        if (rightIfTrue) {
-            forward_motors.add(frontLeft);
-            forward_motors.add(backRight);
-
-        }
-    }
 }
 

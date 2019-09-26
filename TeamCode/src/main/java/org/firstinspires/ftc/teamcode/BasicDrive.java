@@ -30,16 +30,21 @@ public class BasicDrive extends OpBase {
 
         left *= throttle;
         right *= throttle;
-
+        if (gamepad1.dpad_left) this.moveSide(false); else if (gamepad1.dpad_right) this.moveSide(true);
         this.frontLeft.setPower(left);
         this.backLeft.setPower(left);
         this.frontRight.setPower(right);
         this.backRight.setPower(right);
 
+
+
+
+
         telemetry.addData("Left Speed", left);
         telemetry.addData("Right Speed", right);
         telemetry.addData("Drive", drive);
         telemetry.addData("Turn", turn);
+
 
         return true;
     }
