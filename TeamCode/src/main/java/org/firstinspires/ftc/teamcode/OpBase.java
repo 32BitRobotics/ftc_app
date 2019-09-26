@@ -36,6 +36,9 @@ public abstract class OpBase extends LinearOpMode {
     public DcMotor frontRight = null; //front right wheel
     public DcMotor backLeft = null; //back left wheel
     public DcMotor backRight = null; //back right wheel
+    public DcMotor rightMiddle = null; //rotates in the middle (right)
+    public DcMotor leftMiddle = null; //rotates in the middle (left)
+
     public BNO055IMU gyroSensor = null;
 
     public DcMotorList frontDrive = new DcMotorList();
