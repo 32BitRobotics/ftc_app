@@ -10,9 +10,13 @@ public final class GoForwards extends OpBase {
 
         driveAll.setPower(0.4);
 
-        while (opModeIsActive() && runtime.seconds() <= goSeconds);
+        while (opModeIsActive() && runtime.seconds() <= goSeconds) {
+            telemetry.addData("Left Speed", frontLeft.getPower());
+            telemetry.addData("Right Speed", frontRight.getPower());
+            telemetry.update();
+        }
 
-        driveAll.setPower(0.4);
+        driveAll.setPower(0.0);
 
         return false;
     }
